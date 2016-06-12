@@ -1,12 +1,9 @@
 #wooyun爬虫
-==========
 ##功能：
------
 爬取所有公开漏洞（漏洞标题，漏洞url，漏洞作者）
-
 ##关于:
--------
-这是我写的第二个爬虫，目前正在开发中<br \>
+爬虫练习，顺便熟悉git<br \>
 这里是我开发过程：<br \>
-
-
+[Python爬虫—爬取wooyun公开漏洞（1）一个爬虫的开始](http://www.monburan.cn/?p=234)
+[Python爬虫—爬取wooyun公开漏洞（2）提取数据](http://www.monburan.cn/?p=239)
+[Python爬虫—爬取wooyun公开漏洞（3）爬取更多的页面](http://www.monburan.cn/?p=246)
