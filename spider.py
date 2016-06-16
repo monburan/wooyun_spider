@@ -26,18 +26,24 @@ class Data:
     def CreateDB(self,link):
         try:
             linkdb = link.cursor()
-            linkdb.execute("create database wooyun_bug")
-        except MySQLdb.Error,e:
+            linkdb.execute("create database wooyun_bug")    #create database
+        except MySQLdb.Error,e:                             #if database exist pass
             if e[0] == 1007:
+                print "database exist!"
                 pass
+            else:
+                print"Error Code:%d\nError Reason:%s"%(e[0],e[1])
         else:
             print "create database OK!"
         linkdb.execute("use wooyun_bug")
         try:
             linkdb.execute("create table bug_info(bug_id varchar(50),bug_url varchar(100),bug_title varchar(400),bug_author varchar(150))")
-        except MySQLdb.Error,e:
+        except MySQLdb.Error,e:                             #if table exist pass
             if e[0] == 1050:
+                print "table exist!"
                 pass
+            else:
+                print"Error Code:%d\nError Reason:%s"%(e[0],e[1])
         else:
             print "create table OK!"
         linkdb.close()
@@ -55,7 +61,6 @@ class Data:
         bugs = linkdb.execute(sqli)
         for i in linkdb.fetchmany(bugs):
             print i
-#            print i[0],i[1],i[2].decode("utf-8"),i[3].decode("utf-8")
         linkdb.close()
     
     def CloseDB(self,link):
@@ -114,16 +119,15 @@ class Wooyun:
             self.data.CreateDB(link)
         except MySQLdb.Error,e:
             print"Error Code:%d\nError Reason:%s"%(e[0],e[1])
-        
         max_page = self.GetPageNum()
-        for i in range(1,max_page):
+        for i in range(1,max_page+1):
             mk = self.MakeHeaders(i)
             self.GetBugList(link,mk[0],mk[1])
             print "Get Page %d All Bug..."%(i)
             time.sleep(2)
         self.data.SelectData(link)
         self.data.CloseDB(link)
-        
+
 if __name__ == "__main__":
     wy = Wooyun()
     wy.main()
