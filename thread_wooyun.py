@@ -17,7 +17,6 @@ class Wooyun:
             "Referer":"http://wooyun.org/",
             "Connection":"keep-alive"
         }
-        self.headers["Referer"] = "http://wooyun.org/bugs/new_public"
         self.page = 1
 
     def GetPageNum(self):
@@ -37,6 +36,20 @@ class Wooyun:
         else:
             return bug_id,bug_title,bug_url,bug_author
 
+    def buildheader(self,page):
+        headers = self.headers
+        if page == 1:
+            url = self.url
+            return url,headers
+        if page == 2:
+            url = self.url+"page/"+ str(page)
+            headers["Referer"] = "http://wooyun.org/bugs/new_public"
+            return url,headers
+        if page > 2:
+            url = self.url+"page/"+ str(page)
+            headers["Referer"] = "http://wooyun.org/bugs/new_public/page/"+str(page-1)
+            return url,headers
+
     def GetBugList(self,url,headers):
         print "get page bug"
         sleep(2)
@@ -53,23 +66,22 @@ class Wooyun:
     def main(self):
         print 'starting at:',ctime()
         threads = []
-        pagelist = range(0,10)
+        pagelist = range(1,5)
+        print self.GetPageNum()
         for page in pagelist:
-            url = self.url + "page/" +str(page)
-            self.headers["Referer"] = "http://wooyun.org/bugs/new_public/page/" + str(page-1)
-            headers = self.headers
-            print headers
-            t = threading.Thread(target = self.GetBugList,args=(url,headers))
+            print self.buildheader(page)
+            t = threading.Thread(target = self.GetBugList,args=self.buildheader(page))
             threads.append(t)
 
-        for i in pagelist:
+        for i in range(len(pagelist) - 1):
             print i
             threads[i].start()
 
-        for i in pagelist:
+        for i in range(len(pagelist) - 1):
             print i
             threads[i].join()
         print 'end at:',ctime()
+        print len(pagelist)
 if __name__ == "__main__":
     wy = Wooyun()
     wy.main()
